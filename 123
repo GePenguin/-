@@ -1,0 +1,43 @@
+#include<iostream>
+#include<cstdio>
+#include<algorithm>
+using namespace std;
+
+#define int long long
+#define INF 0x3f3f3f3f
+
+const int N = 1e4 + 10;
+int num[N], sum[N];
+int n;
+int MAX;
+
+signed main() {
+	printf("请输入数组长度：");
+	cin >> n;
+	printf("数组元素有：");
+	MAX = -INF;
+	bool zero = false;//判断是否给的整数全为负数
+	for (int i = 1; i <= n; i++) {
+		scanf_s("%lld", &num[i]);
+		if (num[i] >= 0) zero = true;
+	}
+	printf("最大子数组和为：");
+	if (!zero) {
+		cout << 0 << endl;
+		return 0;
+	}
+
+	for (int i = 1; i <= n; i++) {
+		sum[i] = sum[i - 1] + num[i];
+		MAX = max(MAX, sum[i]);
+	}//前缀和即为1~1，1~2，1~3...1~n的所有子数组
+
+	for (int i = 1; i <= n; i++) {
+		for (int j = i; j <= n; j++) {
+			sum[j] -= num[i];//减去第i个数，即为i+1~i+2,i+1~i+3...i+1~i+n的所有子数组
+			MAX = max(MAX, sum[j]);
+		}
+	}//循环依次减去所有的前缀，新的前缀和即为新的子数组，每次都去比较最大值
+	cout << MAX << endl;
+	return 0;
+}
